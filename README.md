@@ -17,13 +17,15 @@ In this talk I'll introduce a setup based on the Selenium Project's Selenium Gri
 
 ### Presentations
 
-[Google Slides]()
-[PDF Slides]()
-[PDF Slides with notes]()
+[Google Slides](https://docs.google.com/presentation/d/1WShHk93YmRtcxW_8CsWeGWd0Qdk0qqRuU32xS8uPrA4/edit?usp=sharing)
+
+[PDF Slides](https://github.com/dskard/seleniumconf2018/raw/master/jump_start_selenium_with_docker_selene_pytest.pdf)
+
+[PDF Slides with notes](https://github.com/dskard/seleniumconf2018/raw/master/jump_start_selenium_with_docker_selene_pytest_notes.pdf)
 
 ### Example template
 
-This repositories `template` directory holds example files you can run on your
+This repository's `template` directory holds example files you can run on your
 own computer. To get started, make sure you have the following software on your
 computer:
   * bash
@@ -58,4 +60,4 @@ make test
 make test-env-down
 ```
 
-Read more about the template
+Read more about the example template [here](https://github.com/dskard/seleniumconf2018/blob/master/template/README.md)

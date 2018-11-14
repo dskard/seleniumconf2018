@@ -157,7 +157,7 @@ make test BROWSER=chrome
 #### Test a single module, using the Firefox web browser
 
 ```bash
-make test PYTESTOPTS="t/test_login.py" BROWSER=firefox
+make test PYTESTOPTS="t/test_front_page_search.py" BROWSER=firefox
 ```
 
 ## Using a debug container
@@ -211,15 +211,15 @@ from conftest import log_web_error
 browser.open_url(url)
 
 # type "cheese" into the search field
-s(by.css('[name="q"]')) \
+s('[name="q"]') \
   .set_value('cheese')
 
 # click the "Google Search" button
-s(by.css('[name="btnK"]')) \
+s('[name="btnK"]') \
   .click()
 
 # check that results are shown
-s(by.css('#resultStats')) \
+s('#resultStats') \
   .should(be.visible)
 
 # use page objects to interact with the web page
