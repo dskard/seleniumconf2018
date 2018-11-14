@@ -22,7 +22,7 @@ class TestFrontPageSearch(object):
         browser.open_url(url)
 
 
-    def test_search_1(self, url, browser_config):
+    def test_search_1(self):
         """Fill in the search form, press the search button, check for results
         """
 
@@ -41,7 +41,7 @@ class TestFrontPageSearch(object):
             .should(be.visible)
 
 
-    def test_search_2(self, url, browser_config):
+    def test_search_2(self):
         """Fill in the search form, press the search button, check for results
         """
 
@@ -58,7 +58,7 @@ class TestFrontPageSearch(object):
             .should(be.visible)
 
 
-    def test_search_3(self, url, browser_config):
+    def test_search_3(self):
         """Fill in the search form, press the search button, check for results
         """
 
@@ -72,7 +72,7 @@ class TestFrontPageSearch(object):
             .result_stats.should(be.visible)
 
 
-    def test_search_4(self, url, browser_config):
+    def test_search_4(self):
         """Fill in the search form, press the search button, check for results
         """
 

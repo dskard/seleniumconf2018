@@ -113,19 +113,19 @@ wait-for-systems-up:
 grid-up: network-up
 	NETWORK=${NETWORK} \
 	GRID_TIMEOUT=${GRID_TIMEOUT} \
-	SEL_VERSION=${SEL_VERSION} \
+	SELENIUM_VERSION=${SELENIUM_VERSION} \
 	docker-compose -f ${DCYML_GRID} -p ${PROJECT} up -d --scale firefox=${SCALE_FIREFOX} --scale chrome=${SCALE_CHROME}
 
 grid-down:
 	NETWORK=${NETWORK} \
 	GRID_TIMEOUT=${GRID_TIMEOUT} \
-	SEL_VERSION=${SEL_VERSION} \
+	SELENIUM_VERSION=${SELENIUM_VERSION} \
 	docker-compose -f ${DCYML_GRID} -p ${PROJECT} down
 
 grid-restart:
 	NETWORK=${NETWORK} \
 	GRID_TIMEOUT=${GRID_TIMEOUT} \
-	SEL_VERSION=${SEL_VERSION} \
+	SELENIUM_VERSION=${SELENIUM_VERSION} \
 	docker-compose -f ${DCYML_GRID} -p ${PROJECT} restart
 
 network-up:
