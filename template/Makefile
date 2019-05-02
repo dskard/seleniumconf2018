@@ -9,6 +9,7 @@ HOURMINSEC=`date +'%H%M%S'`
 LOGS_DIR=${WORKDIR}
 NETWORK=${PROJECT}_default
 PROJECT=templatenet
+PROXY=
 PYTESTLOG?=selenium_tests.log
 PYTESTOPTS?=
 RERUN_FAILURES?=0
@@ -43,6 +44,7 @@ TEST_RUNNER_COMMAND=pytest \
 	    --host=${GRID_HOST} \
 	    --port=${GRID_PORT} \
 	    --capability browserName ${BROWSER} \
+	    --proxy "${PROXY}" \
 	    --url=${SUT_SCHEME}://${SUT_HOST}:${SUT_PORT} \
 	    --verbose \
 	    --tb=short \
@@ -145,6 +147,26 @@ network-down: grid-down
 	    echo "Removing network: ${NETWORK}"; \
 	    docker network rm ${NETWORK}; \
 	fi;
+
+mitmproxy-up:
+	docker run --rm --init -d \
+	    ${DOCKER_TTY_FLAGS} \
+	    --name=mitmproxy-${PROJECT} \
+	    --network=$(NETWORK) \
+	    --volume ~/.mitmproxy:/home/mitmproxy/.mitmproxy \
+	    -p 2030:8080 \
+	    -p 127.0.0.1:2031:8081 \
+	    mitmproxy/mitmproxy \
+	        mitmweb --web-iface 0.0.0.0
+
+mitmproxy-down:
+	$(eval MITMPROXY_EXISTS=$(shell docker container inspect mitmproxy-${PROJECT} > /dev/null 2>&1 && echo 0 || echo 1))
+	@if [ "${MITMPROXY_EXISTS}" = "0" ] ; then \
+        echo -n "Stopping mitmproxy-${PROJECT} ..."; \
+        docker stop mitmproxy-${PROJECT} 1>/dev/null; \
+        echo " done"; \
+    fi;
+
 
 .PHONY: all
 .PHONY: clean

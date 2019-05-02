@@ -11,6 +11,7 @@ import string
 import time
 import urllib.parse
 
+from selenium.webdriver.common.proxy import *
 
 # set the default selene reports folder
 # to the present working directory
@@ -47,6 +48,12 @@ class TimeoutAction(argparse.Action):
 
 def pytest_addoption(parser):
     """Define and parse command line options"""
+
+    parser.addoption(
+        "--proxy",
+        action="store",
+        default="",
+        help="host and port of the proxy to setup in web browser")
 
     parser.addoption(
         "--selene-reports",
@@ -101,3 +108,26 @@ def browser_config(driver):
     driver.maximize_window()
     selene.browser.set_driver(driver)
 
+
+@pytest.fixture(scope="session")
+def proxy(request):
+    """Retrieve the proxy settings"""
+
+    return request.config.getoption("--proxy")
+
+
+@pytest.fixture(scope='session')
+def session_capabilities(proxy, session_capabilities):
+    """Adding more capabilities for all web browsers"""
+
+    if proxy != "":
+        # add proxy settings from the command line to the web browser
+        proxy_details = {
+            'proxyType': 'manual',
+            'httpProxy': proxy,
+            'ftpProxy': proxy,
+            'sslProxy': proxy,
+        }
+        session_capabilities['proxy'] = proxy_details
+
+    return session_capabilities
