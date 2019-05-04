@@ -7,6 +7,8 @@ services:
       - "4444:4444"
     environment:
       - GRID_TIMEOUT=${GRID_TIMEOUT}
+      - http_proxy=${HTTP_PROXY}
+      - https_proxy=${HTTPS_PROXY}
   chrome:
     image: selenium/node-chrome-debug:${SELENIUM_VERSION}
     ports:
@@ -16,6 +18,8 @@ services:
     environment:
       - HUB_PORT_4444_TCP_ADDR=selenium-hub
       - HUB_PORT_4444_TCP_PORT=4444
+      - http_proxy=${HTTP_PROXY}
+      - https_proxy=${HTTPS_PROXY}
     volumes:
       - "/dev/shm:/dev/shm"
   firefox:
@@ -27,6 +31,8 @@ services:
     environment:
       - HUB_PORT_4444_TCP_ADDR=selenium-hub
       - HUB_PORT_4444_TCP_PORT=4444
+      - http_proxy=${HTTP_PROXY}
+      - https_proxy=${HTTPS_PROXY}
     volumes:
       - "/dev/shm:/dev/shm"
 networks:

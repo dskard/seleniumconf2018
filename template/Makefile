@@ -6,6 +6,8 @@ GRID_PORT=4444
 GRID_SCHEME=http
 GRID_TIMEOUT=30000
 HOURMINSEC=`date +'%H%M%S'`
+HTTP_PROXY?=
+HTTPS_PROXY?=
 LOGS_DIR=${WORKDIR}
 NETWORK=${PROJECT}_default
 PROJECT=templatenet
@@ -29,8 +31,16 @@ WORKDIR=/opt/work
 # Jenkins nodes don't have input tty, so we set this to ""
 DOCKER_TTY_FLAGS?=-it
 
+DOCKER_PROXY_FLAGS=--env HTTP_PROXY=${HTTP_PROXY} \
+	    --env HTTPS_PROXY=${HTTPS_PROXY}
+
+DOCKER_COMPOSE_PROXY_VARS=HTTP_PROXY=${HTTP_PROXY} \
+	HTTPS_PROXY=${HTTPS_PROXY} \
+
+
 DOCKER_RUN_COMMAND=docker run --rm --init \
 	    ${DOCKER_TTY_FLAGS} \
+	    ${DOCKER_PROXY_FLAGS} \
 	    --name=tre-${HOURMINSEC} \
 	    --network=$(NETWORK) \
 	    --volume=${CURDIR}:${WORKDIR} \
@@ -105,6 +115,7 @@ wait-for-systems-up:
 	    --volume=${CURDIR}:${WORKDIR} \
 	    --user=`id -u`:`id -g` \
 	    --workdir=${WORKDIR} \
+	    ${DOCKER_PROXY_FLAGS} \
 	    ${TRE_IMAGE} \
 	    ./wait_for_systems_up.sh \
 	        -g '${GRID_SCHEME}://${GRID_HOST}:${GRID_PORT}' \
@@ -113,18 +124,21 @@ wait-for-systems-up:
 	        -s '${SUT_SCHEME}://${SUT_HOST}:${SUT_PORT}'
 
 grid-up: network-up
+	${DOCKER_COMPOSE_PROXY_VARS} \
 	NETWORK=${NETWORK} \
 	GRID_TIMEOUT=${GRID_TIMEOUT} \
 	SELENIUM_VERSION=${SELENIUM_VERSION} \
 	docker-compose -f ${DCYML_GRID} -p ${PROJECT} up -d --scale firefox=${SCALE_FIREFOX} --scale chrome=${SCALE_CHROME}
 
 grid-down:
+	${DOCKER_COMPOSE_PROXY_VARS} \
 	NETWORK=${NETWORK} \
 	GRID_TIMEOUT=${GRID_TIMEOUT} \
 	SELENIUM_VERSION=${SELENIUM_VERSION} \
 	docker-compose -f ${DCYML_GRID} -p ${PROJECT} down
 
 grid-restart:
+	${DOCKER_COMPOSE_PROXY_VARS} \
 	NETWORK=${NETWORK} \
 	GRID_TIMEOUT=${GRID_TIMEOUT} \
 	SELENIUM_VERSION=${SELENIUM_VERSION} \
@@ -151,6 +165,7 @@ network-down: grid-down
 mitmproxy-up:
 	docker run --rm --init -d \
 	    ${DOCKER_TTY_FLAGS} \
+	    ${DOCKER_PROXY_FLAGS} \
 	    --name=mitmproxy-${PROJECT} \
 	    --network=$(NETWORK) \
 	    --volume ~/.mitmproxy:/home/mitmproxy/.mitmproxy \
