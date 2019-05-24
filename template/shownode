@@ -76,7 +76,7 @@ def find_vnc_ports(container_name):
     # find all selenium/node-* containers that have a host
     # machine port forwarded to the container's port 5900
     # capture the host machine's port number
-    container_re = 'selenium/node-.+0\.0\.0\.0:(\d+)->5900/tcp\s+{}'\
+    container_re = '.+0\.0\.0\.0:(\d+)->5900/tcp\s+{}'\
                     .format(container_name) \
                     .encode('utf8')
     log.debug('container_re = {}'.format(container_re))
